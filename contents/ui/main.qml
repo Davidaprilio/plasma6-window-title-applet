@@ -130,6 +130,7 @@ PlasmoidItem {
             PlasmaComponents.Label {
                 id: fullText
                 elide:Text.ElideRight
+                textFormat: Text.RichText
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter

@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.core as PlasmaCore
@@ -44,30 +45,53 @@ GridLayout {
     }
     CItem {length: cfg.midSpace}
     CItem{
+        id: labelWrapper
         length : {
             if(cfg.lengthKind == 0) return label.implicitWidth
             else if(cfg.lengthKind == 1) return labelLen
             else return Math.min(label.implicitWidth,labelLen)
         }
         clip: true
-        PlasmaComponents.Label {
-            id                      : label
-            verticalAlignment       : Text.AlignVCenter
-            text                    : root.text
-            color                   : Kirigami.Theme.textColor
-            elide                   : Tools.getElide(cfg.elidePos)
-            width : {
-                if(cfg.lengthKind == 0) return label.implicitWidth
-                else if(cfg.lengthKind == 1) return labelLen
-                else return Math.min(label.implicitWidth,labelLen)
+
+        readonly property bool overflowing: label.implicitWidth > labelWrapper.width
+
+        Item {
+            id: labelContainer
+            anchors.fill: parent
+
+            layer.enabled: labelWrapper.overflowing
+            layer.effect: OpacityMask {
+                maskSource: Item {
+                    width: labelContainer.width
+                    height: labelContainer.height
+                    Rectangle {
+                        anchors.fill: parent
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop { position: 0.0; color: "#ffffffff" }
+                            GradientStop { position: Math.max(0, 1.0 - (Kirigami.Units.gridUnit * 2) / labelContainer.width); color: "#ffffffff" }
+                            GradientStop { position: 1.0; color: "#00ffffff" }
+                        }
+                    }
+                }
             }
-            rotation                : isVertical?plasmoid.location===PlasmaCore.Types.LeftEdge?-90:90:0
-            anchors.centerIn        : parent
-            font {
-                capitalization      : cfg.isCaps ? Font.Capitalize : Font.MixedCase
-                bold                : cfg.isBold
-                italic              : cfg.isItalic
-                pixelSize           : cfg.fontSize
+
+            PlasmaComponents.Label {
+                id                      : label
+                verticalAlignment       : Text.AlignVCenter
+                textFormat              : Text.RichText
+                text                    : root.text
+                color                   : Kirigami.Theme.textColor
+                elide                   : Tools.getElide(cfg.elidePos)
+                width                   : labelWrapper.overflowing ? implicitWidth : labelWrapper.width
+                rotation                : isVertical?plasmoid.location===PlasmaCore.Types.LeftEdge?-90:90:0
+                anchors.centerIn        : parent
+                font {
+                    capitalization      : cfg.isCaps ? Font.Capitalize : Font.MixedCase
+                    bold                : cfg.isBold
+                    italic              : cfg.isItalic
+                    pixelSize           : cfg.fontSize
+                }
             }
         }
     }

@@ -14,12 +14,17 @@ function currentDesktopName() {
         return virtualDesktopInfo.desktopNames[idx];
     return "";
 }
-function sub(str){
+function fontToPx(str){
     return str
+        .replace(/<font\s+size\s*=\s*"(\d+)"\s*>/gi, function(_,px){ return '<span style="font-size:'+px+'px">' })
+        .replace(/<\/font>/gi, '</span>')
+}
+function sub(str){
+    return fontToPx(str
         .replace("%a",activeTaskItem?.appName??"")
         .replace("%w",activeTaskItem?.title??"")
         .replace("%q",fullActivityInfo?.name??"")
-        .replace("%v",currentDesktopName())
+        .replace("%v",currentDesktopName()))
 }
 function substitute() {
     let minSize = Math.min(cfg.subsMatchApp.length, cfg.subsReplace.length,cfg.subsMatchTitle.length)
@@ -35,9 +40,9 @@ function substitute() {
     return sub(text)
 }
 function altSubstitute() {
-    return cfg.altTxt
+    return fontToPx(cfg.altTxt
         .replace("%q",fullActivityInfo.name)
-        .replace("%v",currentDesktopName())
+        .replace("%v",currentDesktopName()))
 }
 function getText() {
     if(isActiveWindowMaximized) return Tools.substitute()
