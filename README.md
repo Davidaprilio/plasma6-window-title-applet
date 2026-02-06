@@ -5,9 +5,11 @@ A Plasma 6 applet that builds on the work of [Psifidotos](https://github.com/psi
 - <b>%a</b> : Application Name
 - <b>%w</b> : Windows Title
 - <b>%q</b> : Activity Name
+- <b>%v</b> : Virtual Desktop Name
 - `<b>`..`</b>` : Selective bold
 - `<i>`..`</i>` : Selective Italics
 - `<br>`/`<p>` : New line ([Text will not be elided with multi-line text](https://bugreports.qt.io/browse/QTBUG-16567))
+- `<font size="15px">`..`</font>` : Selective font size in pixels
 
 ## Images
 <div align="center">
