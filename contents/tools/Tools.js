@@ -7,11 +7,19 @@ function match(pat,str){
     let rgx = new RegExp(clean(pat))
     return rgx.test(str)
 }
+function currentDesktopName() {
+    if (!virtualDesktopInfo) return "";
+    var idx = virtualDesktopInfo.desktopIds.indexOf(virtualDesktopInfo.currentDesktop);
+    if (idx >= 0 && idx < virtualDesktopInfo.desktopNames.length)
+        return virtualDesktopInfo.desktopNames[idx];
+    return "";
+}
 function sub(str){
     return str
         .replace("%a",activeTaskItem?.appName??"")
         .replace("%w",activeTaskItem?.title??"")
         .replace("%q",fullActivityInfo?.name??"")
+        .replace("%v",currentDesktopName())
 }
 function substitute() {
     let minSize = Math.min(cfg.subsMatchApp.length, cfg.subsReplace.length,cfg.subsMatchTitle.length)
@@ -27,7 +35,9 @@ function substitute() {
     return sub(text)
 }
 function altSubstitute() {
-    return cfg.altTxt.replace("%q",fullActivityInfo.name)
+    return cfg.altTxt
+        .replace("%q",fullActivityInfo.name)
+        .replace("%v",currentDesktopName())
 }
 function getText() {
     if(isActiveWindowMaximized) return Tools.substitute()

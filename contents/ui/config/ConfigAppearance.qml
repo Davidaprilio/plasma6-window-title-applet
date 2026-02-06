@@ -48,6 +48,7 @@ Kirigami.ScrollablePage {
                     %a - Application Name<p>
                     %w - Window Title<p>
                     %q - Activity Info<p>
+                    %v - Virtual Desktop Name<p>
                     Use HTML tags for bold, italic and multi-line text") }
             }
         }
@@ -70,6 +71,7 @@ Kirigami.ScrollablePage {
                 PC3.ToolTip{ text: i18n("This pattern will be shown when no window is active.<p>
                     <b>Substitutions:</b><p>
                     %q - Activity Info<p>
+                    %v - Virtual Desktop Name<p>
                     Use HTML tags for bold, italic and multi-line text") }
             }
         }
